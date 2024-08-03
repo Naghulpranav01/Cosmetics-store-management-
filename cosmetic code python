@@ -1,5 +1,5 @@
 import os import platform import mysql.connector import pandas as pd
-mydb=mysql.connector.connect(host="localhost",\  user="root",\  passwd="tiger",\  database="cosmetics")
+mydb=mysql.connector.connect(host="localhost",\  user="root",\  passwd="Your passwd",\  database="cosmetics")
 mycursor=mydb.cursor()
 '''-------------------------------------------------------------------------------------------------''' def cosmeticsInsert():  L=[]
  cos_id=int(input("Enter the cosmetic ID number : "))  L.append(cos_id)  name=input("Enter the Cosmetics Name: ")  L.append(name)  company=input("Enter company of Cosmetics : ")  L.append(company)
