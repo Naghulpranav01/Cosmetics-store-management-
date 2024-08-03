@@ -1,0 +1,64 @@
+import os import platform import mysql.connector import pandas as pd
+mydb=mysql.connector.connect(host="localhost",\  user="root",\  passwd="tiger",\  database="cosmetics")
+mycursor=mydb.cursor()
+'''-------------------------------------------------------------------------------------------------''' def cosmeticsInsert():  L=[]
+ cos_id=int(input("Enter the cosmetic ID number : "))  L.append(cos_id)  name=input("Enter the Cosmetics Name: ")  L.append(name)  company=input("Enter company of Cosmetics : ")  L.append(company)
+ cost=int(input("Enter the Cost : "))  L.append(cost)  manudate=input("Enter the Date of Manufacture : ")  L.append(manudate)
+ expdate=input("Enter the Date of Expiry : ")
+ L.append(expdate)  cosmme=(L)
+ sql="insert into cosmetics (code,name,company,cost,dom,doe) values (%s,%s,%s,%s,%s,%s)"  mycursor.execute(sql,cosmme)  mydb.commit()
+
+
+ '''-----------------------------------------------------------------------------------------------------''' def cosmeticsView():
+
+ print("Select the search criteria : ")  print("1. Roll")  print("2. Name")  print("3. All")  ch=int(input("Enter the choice : "))  if ch==1:      s=int(input("Enter cosmetics ID : "))      rl=(s,)
+     sql="select * from cosmetics where code=%s"
+     mycursor.execute(sql,rl)  elif ch==2:      s=input("Enter Cosmetics Name : ")      rl=(s,)
+     sql="select * from cosmetics where name=%s"
+     mycursor.execute(sql,rl)  elif ch==3:      sql="select * from cosmetics"      mycursor.execute(sql)  res=mycursor.fetchall()
+ print("The Cosmetics Stock details are as follows : ")  print("(Cosmetics ID, Cosmetics Name, Cost, Date of Manufacture, Date of Expiry)")  for x in res:      print(x)
+'''-----------------------------------------------------------------------------''' def viewCustomer():
+    print("Select the search criteria : ") 
+    print("1. Customer ID")
+    print("2. Customer Name")
+    print("3. All")     ch=int(input("Enter the choice : "))     if ch==1:         s=int(input("Enter customer ID : "))         rl=(s,)
+        sql="select * from customer where cust_id=%s"
+        mycursor.execute(sql,rl)     elif ch==2:         s=input("Enter Cosmetics Name : ")         rl=(s,)
+        sql="select * from customer where cname=%s"
+        mycursor.execute(sql,rl)     elif ch==3:         sql="select * from customer"         mycursor.execute(sql)     res=mycursor.fetchall()
+    print("The Cosmetics Stock details are as follows : ")     print("(Cosmetics ID, Cosmetics Name, Cost, Date of Manufacture, Date of Expiry)")     for x in res:         print(x)
+    
+def CustomerPurchase():
+
+
+    print("Please enter the details to purchase cosmetics product :")     sql="select * from cosmetics"     mycursor.execute(sql)
+    res=mycursor.fetchall()
+   
+    print("The Cosmetics Stock details are as follows : ")     print("(Cosmetics ID, Cosmetics Name, Cost, Date of Manufacture, Date of Expiry)")     for x in res:         print(x)     cost=0.0     LI=dict();     ch='y'     tsum=0.0     q1=0     cc=0.0     while(ch=='y'):         c1=input("Enter the items to be purchased : ")         r1=(c1,)
+        sql="Select cost from cosmetics where name=%s;"
+        mycursor.execute(sql,r1)         res=mycursor.fetchall()         for x in res:             cost=float(x[0])             print (cost)
+            q1=int(input("Enter the item quantity: "))             cc=q1*cost             print(cc)             tsum=tsum+cc         ch=input("Want to purchase more items:")     else:         L=[]
+        cid=int(input("Enter customer ID"))         L.append(cid)         cname=input("Enter customer name")         L.append(cname)
+        phone_no=int(input("Enter Phone no."))
+        L.append(phone_no)         add=input("Enter Address")         L.append(add)         gender=input("Enter your Gender")         L.append(gender)         member=input("Enter membership")
+        L.append(member)         cosmme=(L)
+        sql="insert into customer (cust_id,cname,c_phoneno,c_address,gender,membership) values (%s,%s,%s,%s,%s,%s)"         mycursor.execute(sql,cosmme)         mydb.commit()
+        print("Record of customer saves...")
+        print("Total cost of item purchased is Rs.",tsum)
+ 
+'''---------------------------------------------------------------------------------''' def removeCosmetics():  cname=int(input("Enter the cosmetics name to be deleted : "))  rl=(cname,)
+ sql="Delete from cosmetics where name=%s"  mycursor.execute(sql,rl)
+ sql="Delete from customer where cname=%s"
+ mycursor.execute(sql,rl)  mydb.commit()
+'''------------------------------------------------------------------------------------------'''
+def MenuSet(): #Function For The Student Management System
+ print("Enter 1 : To Add cosmetics product")  print("Enter 2 : To View Complete Cosmetics Stock")  print("Enter 3 : To Purchase any cosmetics Product ")  print("Enter 4 : To 
+
+Remove any Cosmetic product")  print("Enter 5 : To View Customer Details")
+ try:
+     #Using Exceptions For Validation      userInput = int(input("Please Select An Above Option: ")) #Will Take Input From User  except ValueError:      exit("\nHy! That's Not A Number") #Error Message  else:      print("\n") #Print New Line  if(userInput == 1):      cosmeticsInsert()  elif (userInput==2):      cosmeticsView()  elif (userInput==3):      CustomerPurchase()  elif (userInput==4):
+     removeCosmetics()  elif (userInput==5):      viewCustomer()  else:      print("Enter correct choice. . . ")
+MenuSet() def runAgain():  runAgn = input("\nwant To Run Again Y/n: ")  while(runAgn.lower() == 'y'):      if(platform.system() == "Windows"):
+         print(os.system('cls'))      else:          print(os.system('clear'))      MenuSet()
+     runAgn = input("\nwant To Run Again Y/n: ")
+     print("good Bye") runAgain()
